@@ -1,0 +1,1 @@
+go run src/main.go -train="/Users/rich/develop/github/gomila/resources/chapter5/horseColicTraining.txt" -test="/Users/rich/develop/github/gomila/resources/chapter5/horseColicTest.txt" times=10
