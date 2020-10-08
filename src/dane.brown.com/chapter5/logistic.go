@@ -12,7 +12,7 @@ import (
 )
 
 /**
-sigmod函数
+sigmod函数，核心参数
 */
 func sigmoid(z float64) float64 {
 	return 1 / (1 + math.Exp(-z))
@@ -20,24 +20,32 @@ func sigmoid(z float64) float64 {
 
 /**
 随机梯度上升算法
+@dataMatrixIn 输入的矩阵
+@label 特征矩阵
+@trainTimes 训练次数
+@diffAccuracy 步长的精确度
 */
+
 func RandomGradAscent(dataMatrixIn [][]float64, label []float64, trainTimes int, diffAccuracy float64) []float64 {
-	var m = len(dataMatrixIn)
-	var n = len(dataMatrixIn[0])
-	var x = make([]float64, n)
+	var m = len(dataMatrixIn)    //行数
+	var n = len(dataMatrixIn[0]) //列数
+	var x = make([]float64, n)   //造一个空的数组，长度是输入矩阵的列数
 	for i := range x {
 		x[i] = float64(1)
-	}
+	} //每个列的值都是1
 	for t := 0; t < trainTimes; t++ { //训练次数
 		for i := 0; i < m; i++ { //行
-			var deltaX = float64(4/(1+t+i)) + diffAccuracy
-			var rdmIdx = rand.Int31n(int32(m)) //随机数
+			var deltaX = float64(4/(1+t+i)) + diffAccuracy //微小的变化,目的是拉普拉斯平滑
+			var rdmIdx = rand.Int31n(int32(m))             //随机数
 			//var rdmIdx = i //随机数
 			var row = dataMatrixIn[rdmIdx] //随机内容
 			var sum float64 = 0
 			for k, v := range row {
-				sum += v * x[k]
+				//k表示key，v表示value，也就是，k表示index，v表示值
+				sum += v * x[k] //这是最难理解的地方，理解了都好办
 			} //向量乘机
+			//上面的这句话的意思是：随便选一行，让 这行里面的每一列的值 * x[列],然后相加.
+			//也就是 z=w0*x0+w1*x1+w2*x2......
 			var deltaY = label[rdmIdx] - sigmoid(sum) //目标值得差距
 
 			for k, v := range row {
